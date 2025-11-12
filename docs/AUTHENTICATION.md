@@ -518,4 +518,3 @@ if err != nil {
 - [Zitadel Documentation](https://zitadel.com/docs)
 - [JWT Best Practices](https://tools.ietf.org/html/rfc8725)
 - [OAuth 2.0 Security Best Practices](https://tools.ietf.org/html/draft-ietf-oauth-security-topics)
-- [CloudBridge Security Guide](https://docs.cloudbridge.global/security)

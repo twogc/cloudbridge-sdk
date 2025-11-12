@@ -200,7 +200,7 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 ## Security
 
-For security issues, please email security@cloudbridge.global instead of using the issue tracker.
+For security issues, please email security@2gc.ru instead of using the issue tracker.
 
 ## Project Status
 
