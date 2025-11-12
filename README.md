@@ -172,7 +172,7 @@ client.share_dataset(
 
 ## Requirements
 
-- Go 1.21+ (for Go SDK)
+- Go 1.25+ (for Go SDK)
 - Python 3.9+ (for Python SDK)
 - Node.js 18+ (for JavaScript SDK)
 - CloudBridge account and API token
@@ -232,9 +232,7 @@ Current version: 0.1.0 (Alpha)
 
 ## Related Projects
 
-- [cloudbridge-scalable-relay](https://github.com/twogc/cloudbridge-scalable-relay) - Core relay implementation
 - [cloudbridge-docs](https://github.com/twogc/cloudbridge-docs) - Architecture documentation
-- [cloudbridge-dashboard](https://github.com/twogc/cloudbridge-dashboard) - Management UI
 
 ## Copyright
 
