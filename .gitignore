@@ -31,8 +31,15 @@ go/*.out
 go/bin/
 go/coverage.txt
 go/coverage.html
+go/examples/*/main
+go/examples/*/*.exe
+go/examples/*/simple_conn
+go/examples/*/tunnel_example
+go/examples/*/echo_server
+go/examples/*/mesh_chat
 
 # Python
+**/__pycache__/
 python/__pycache__/
 python/*.py[cod]
 python/*$py.class
@@ -64,22 +71,24 @@ python/.pytype/
 python/venv/
 python/env/
 
-# JavaScript
-javascript/node_modules/
-javascript/npm-debug.log*
-javascript/yarn-debug.log*
-javascript/yarn-error.log*
-javascript/lerna-debug.log*
-javascript/.npm
-javascript/.eslintcache
-javascript/.node_repl_history
-javascript/*.tgz
-javascript/.yarn-integrity
-javascript/.cache
-javascript/coverage/
-javascript/dist/
-javascript/lib/
-javascript/build/
+# JavaScript/TypeScript
+js/node_modules/
+js/npm-debug.log*
+js/yarn-debug.log*
+js/yarn-error.log*
+js/lerna-debug.log*
+js/.npm
+js/.eslintcache
+js/.node_repl_history
+js/*.tgz
+js/.yarn-integrity
+js/.cache
+js/coverage/
+js/dist/
+js/lib/
+js/build/
+js/examples/*/node_modules/
+js/examples/*/dist/
 
 # Testing
 *.test
