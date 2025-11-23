@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"net"
 	"sync"
 )
 
@@ -70,14 +72,65 @@ type tunnel struct {
 
 // start starts the tunnel
 func (t *tunnel) start(ctx context.Context) error {
-	// TODO: Implement tunnel creation
-	// This would involve:
-	// 1. Establishing connection to remote peer
-	// 2. Setting up local listener on LocalPort
-	// 3. Forwarding traffic between local and remote
-	// 4. Handling reconnection on failure
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", t.config.LocalPort))
+	if err != nil {
+		return fmt.Errorf("failed to start listener: %w", err)
+	}
+
+	go func() {
+		defer listener.Close()
+		for {
+			t.mu.RLock()
+			if t.closed {
+				t.mu.RUnlock()
+				return
+			}
+			t.mu.RUnlock()
+
+			conn, err := listener.Accept()
+			if err != nil {
+				if !t.closed {
+					fmt.Printf("failed to accept connection: %v\n", err)
+				}
+				return
+			}
+
+			go t.handleConnection(ctx, conn)
+		}
+	}()
 
 	return nil
+}
+
+func (t *tunnel) handleConnection(ctx context.Context, localConn net.Conn) {
+	defer localConn.Close()
+
+	remoteConn, err := t.client.Connect(ctx, t.config.RemotePeer)
+	if err != nil {
+		fmt.Printf("failed to connect to remote peer: %v\n", err)
+		return
+	}
+	defer remoteConn.Close()
+
+	// Send handshake
+	handshake := fmt.Sprintf(`{"type":"tunnel","port":%d}`, t.config.RemotePort)
+	if _, err := remoteConn.Write([]byte(handshake)); err != nil {
+		fmt.Printf("failed to send handshake: %v\n", err)
+		return
+	}
+
+	// Bidirectional copy
+	errChan := make(chan error, 2)
+	go func() {
+		_, err := io.Copy(remoteConn, localConn)
+		errChan <- err
+	}()
+	go func() {
+		_, err := io.Copy(localConn, remoteConn)
+		errChan <- err
+	}()
+
+	<-errChan
 }
 
 // RemotePeer returns the remote peer ID

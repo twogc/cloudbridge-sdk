@@ -133,11 +133,16 @@ func (b *ClientBridge) ConnectToPeer(ctx context.Context, peerID string) (*PeerC
 	b.logger.Info("Connecting to peer", "peer_id", peerID)
 
 	// Use P2P manager to establish connection
-	// This is a simplified implementation - actual connection logic will be more complex
+	p2pConn, err := b.p2pManager.ConnectToPeer(peerID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to peer: %w", err)
+	}
+
 	conn := &PeerConnection{
 		PeerID:      peerID,
 		ConnectedAt: time.Now(),
 		bridge:      b,
+		p2pConn:     p2pConn,
 	}
 
 	return conn, nil
@@ -203,27 +208,58 @@ func (b *ClientBridge) Close() error {
 	return nil
 }
 
+// Broadcast sends data to all connected peers
+func (b *ClientBridge) Broadcast(ctx context.Context, data []byte) error {
+	if b.p2pManager == nil {
+		return fmt.Errorf("P2P manager not initialized")
+	}
+	return b.p2pManager.Broadcast(data)
+}
+
+// Send sends data to a specific peer
+func (b *ClientBridge) Send(ctx context.Context, peerID string, data []byte) error {
+	if b.p2pManager == nil {
+		return fmt.Errorf("P2P manager not initialized")
+	}
+	return b.p2pManager.Send(peerID, data)
+}
+
+// GetMeshPeers returns a list of connected peers in the mesh
+func (b *ClientBridge) GetMeshPeers() []string {
+	if b.p2pManager == nil {
+		return []string{}
+	}
+	return b.p2pManager.GetConnectedPeers()
+}
+
 // PeerConnection represents a connection to a peer through the bridge
 type PeerConnection struct {
 	PeerID      string
 	ConnectedAt time.Time
 	bridge      *ClientBridge
+	p2pConn     *p2p.PeerConnection
 }
 
 // Read reads data from the peer connection
 func (pc *PeerConnection) Read(b []byte) (int, error) {
-	// TODO: Implement actual read from QUIC stream
-	return 0, fmt.Errorf("not implemented")
+	if pc.p2pConn == nil || pc.p2pConn.Stream == nil {
+		return 0, fmt.Errorf("connection not established")
+	}
+	return pc.p2pConn.Stream.Read(b)
 }
 
 // Write writes data to the peer connection
 func (pc *PeerConnection) Write(b []byte) (int, error) {
-	// TODO: Implement actual write to QUIC stream
-	return 0, fmt.Errorf("not implemented")
+	if pc.p2pConn == nil || pc.p2pConn.Stream == nil {
+		return 0, fmt.Errorf("connection not established")
+	}
+	return pc.p2pConn.Stream.Write(b)
 }
 
 // Close closes the peer connection
 func (pc *PeerConnection) Close() error {
-	// TODO: Implement connection close
+	if pc.p2pConn != nil && pc.p2pConn.Stream != nil {
+		return pc.p2pConn.Stream.Close()
+	}
 	return nil
 }

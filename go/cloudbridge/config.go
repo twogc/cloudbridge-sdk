@@ -28,6 +28,11 @@ type Config struct {
 
 	// TLS configuration
 	InsecureSkipVerify bool
+
+	// Callbacks
+	OnConnect    func(peer string)
+	OnDisconnect func(peer string, err error)
+	OnReconnect  func(peer string)
 }
 
 // RetryPolicy defines retry behavior for failed operations
@@ -97,6 +102,27 @@ func WithProtocols(protocols ...Protocol) Option {
 func WithInsecureSkipVerify(skip bool) Option {
 	return func(c *Config) {
 		c.InsecureSkipVerify = skip
+	}
+}
+
+// WithOnConnect sets the connection callback
+func WithOnConnect(callback func(peer string)) Option {
+	return func(c *Config) {
+		c.OnConnect = callback
+	}
+}
+
+// WithOnDisconnect sets the disconnection callback
+func WithOnDisconnect(callback func(peer string, err error)) Option {
+	return func(c *Config) {
+		c.OnDisconnect = callback
+	}
+}
+
+// WithOnReconnect sets the reconnection callback
+func WithOnReconnect(callback func(peer string)) Option {
+	return func(c *Config) {
+		c.OnReconnect = callback
 	}
 }
 

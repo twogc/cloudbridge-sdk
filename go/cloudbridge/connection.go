@@ -6,6 +6,8 @@ import (
 	"io"
 	"sync"
 	"time"
+
+	"github.com/twogc/cloudbridge-sdk/go/cloudbridge/internal/bridge"
 )
 
 // Connection represents a P2P connection to a peer
@@ -42,24 +44,15 @@ type connection struct {
 	// Metrics
 	bytesSent     uint64
 	bytesReceived uint64
+
+	// Underlying bridge connection
+	bridgeConn *bridge.PeerConnection
 }
 
 // dial establishes a connection to the peer
 func (c *connection) dial(ctx context.Context) error {
-	// TODO: Implement actual connection logic
-	// This would involve:
-	// 1. Resolving peer address via DNS
-	// 2. Establishing QUIC/gRPC/WebSocket connection
-	// 3. Authentication via JWT token
-	// 4. Setting up connection state
-
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	c.connected = true
-	c.connectedAt = time.Now()
-
-	return nil
+	// This method is deprecated in favor of transport.connectToPeer
+	return errors.New("use transport.connectToPeer instead")
 }
 
 // Read reads data from the connection
@@ -69,16 +62,19 @@ func (c *connection) Read(b []byte) (int, error) {
 		c.mu.RUnlock()
 		return 0, errors.New("connection is closed")
 	}
+	if c.bridgeConn == nil {
+		c.mu.RUnlock()
+		return 0, errors.New("connection not established")
+	}
 	c.mu.RUnlock()
 
-	// TODO: Implement actual read from underlying connection
-	n := 0
+	n, err := c.bridgeConn.Read(b)
 
 	c.mu.Lock()
 	c.bytesReceived += uint64(n)
 	c.mu.Unlock()
 
-	return n, errors.New("not implemented")
+	return n, err
 }
 
 // Write writes data to the connection
@@ -88,16 +84,19 @@ func (c *connection) Write(b []byte) (int, error) {
 		c.mu.RUnlock()
 		return 0, errors.New("connection is closed")
 	}
+	if c.bridgeConn == nil {
+		c.mu.RUnlock()
+		return 0, errors.New("connection not established")
+	}
 	c.mu.RUnlock()
 
-	// TODO: Implement actual write to underlying connection
-	n := len(b)
+	n, err := c.bridgeConn.Write(b)
 
 	c.mu.Lock()
 	c.bytesSent += uint64(n)
 	c.mu.Unlock()
 
-	return n, errors.New("not implemented")
+	return n, err
 }
 
 // Close closes the connection
@@ -117,13 +116,16 @@ func (c *connection) close() error {
 	c.closed = true
 	c.connected = false
 
-	// TODO: Close underlying connection
-
-	if c.client.onDisconnect != nil {
-		c.client.onDisconnect(c.peerID, nil)
+	var err error
+	if c.bridgeConn != nil {
+		err = c.bridgeConn.Close()
 	}
 
-	return nil
+	if c.client != nil && c.client.onDisconnect != nil {
+		c.client.onDisconnect(c.peerID, err)
+	}
+
+	return err
 }
 
 // PeerID returns the peer identifier

@@ -25,7 +25,7 @@ func newTransport(config *Config) (*transport, error) {
 
 	bridgeConfig := &bridge.BridgeConfig{
 		Token:              config.Token,
-		RelayServerURL:     fmt.Sprintf("https://relay.%s.cloudbridge.global", config.Region),
+		RelayServerURL:     fmt.Sprintf("https://relay.%s.2gc.ru", config.Region),
 		TenantID:           extractTenantID(config.Token),
 		InsecureSkipVerify: config.InsecureSkipVerify,
 		Timeout:            config.Timeout,
@@ -79,6 +79,7 @@ func (t *transport) connectToPeer(ctx context.Context, peerID string) (*connecti
 		peerID:      peerID,
 		connected:   true,
 		connectedAt: peerConn.ConnectedAt,
+		bridgeConn:  peerConn,
 	}
 
 	return conn, nil
@@ -100,6 +101,42 @@ func (t *transport) close() error {
 	}
 
 	return nil
+}
+
+// broadcast sends data to all connected peers
+func (t *transport) broadcast(ctx context.Context, data []byte) error {
+	t.mu.RLock()
+	if t.closed {
+		t.mu.RUnlock()
+		return fmt.Errorf("transport is closed")
+	}
+	t.mu.RUnlock()
+
+	return t.bridge.Broadcast(ctx, data)
+}
+
+// send sends data to a specific peer
+func (t *transport) send(ctx context.Context, peerID string, data []byte) error {
+	t.mu.RLock()
+	if t.closed {
+		t.mu.RUnlock()
+		return fmt.Errorf("transport is closed")
+	}
+	t.mu.RUnlock()
+
+	return t.bridge.Send(ctx, peerID, data)
+}
+
+// getMeshPeers returns a list of connected peers in the mesh
+func (t *transport) getMeshPeers() []string {
+	t.mu.RLock()
+	if t.closed {
+		t.mu.RUnlock()
+		return []string{}
+	}
+	t.mu.RUnlock()
+
+	return t.bridge.GetMeshPeers()
 }
 
 // extractTenantID extracts tenant ID from JWT token

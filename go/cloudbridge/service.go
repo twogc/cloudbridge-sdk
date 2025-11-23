@@ -4,11 +4,14 @@ import "errors"
 
 // Service represents a discovered service
 type Service struct {
-	Name    string
-	Address string
-	Port    int
-	Tags    []string
-	Healthy bool
+	ID       string
+	Name     string
+	Address  string
+	Port     int
+	Tags     []string
+	Healthy  bool
+	PeerID   string
+	Metadata map[string]string
 }
 
 // ServiceConfig holds configuration for service registration

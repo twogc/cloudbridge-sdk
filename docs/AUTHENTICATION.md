@@ -69,7 +69,7 @@ Header:
 
 Payload:
 {
-  "iss": "https://auth.cloudbridge.global",
+  "iss": "https://auth.2gc.ru",
   "sub": "user-id",
   "aud": "cloudbridge-api",
   "exp": 1735689600,
@@ -225,8 +225,8 @@ config := &oauth2.Config{
     ClientID:     "cloudbridge-app",
     ClientSecret: "secret",
     Endpoint: oauth2.Endpoint{
-        AuthURL:  "https://auth.cloudbridge.global/oauth/authorize",
-        TokenURL: "https://auth.cloudbridge.global/oauth/token",
+        AuthURL:  "https://auth.2gc.ru/oauth/authorize",
+        TokenURL: "https://auth.2gc.ru/oauth/token",
     },
     RedirectURL: "http://localhost:8080/callback",
     Scopes:      []string{"openid", "profile", "cloudbridge"},
@@ -251,7 +251,7 @@ For CLI applications:
 ```go
 // Request device code
 resp, err := http.PostForm(
-    "https://auth.cloudbridge.global/oauth/device",
+    "https://auth.2gc.ru/oauth/device",
     url.Values{"client_id": {"cloudbridge-cli"}},
 )
 

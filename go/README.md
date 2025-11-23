@@ -297,7 +297,7 @@ go test -bench=. ./...
 ## Support
 
 - GitHub Issues: https://github.com/twogc/cloudbridge-sdk/issues
-- Documentation: https://docs.cloudbridge.global
+- Documentation: https://docs.2gc.ru
 
 ## License
 

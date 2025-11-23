@@ -45,17 +45,20 @@ type mesh struct {
 
 // join joins the mesh network
 func (m *mesh) join(ctx context.Context) error {
-	// TODO: Implement mesh join
-	// This would involve:
-	// 1. Discovering peers in the network
-	// 2. Establishing connections to peers
-	// 3. Starting message receiving goroutine
-	// 4. Announcing presence to the network
-
+	// The mesh network is already initialized by the transport layer
+	// We just need to verify we are connected
+	
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
+	// Initialize peers map
 	m.peers = make(map[string]bool)
+	
+	// Get initial peers
+	peers := m.client.transport.getMeshPeers()
+	for _, peer := range peers {
+		m.peers[peer] = true
+	}
 
 	return nil
 }
@@ -74,8 +77,7 @@ func (m *mesh) Broadcast(ctx context.Context, data []byte) error {
 	}
 	m.mu.RUnlock()
 
-	// TODO: Implement broadcast
-	return errors.New("not implemented")
+	return m.client.transport.broadcast(ctx, data)
 }
 
 // Send sends a message to a specific peer
@@ -91,8 +93,7 @@ func (m *mesh) Send(ctx context.Context, peerID string, data []byte) error {
 		return errors.New("peer ID cannot be empty")
 	}
 
-	// TODO: Implement send to specific peer
-	return errors.New("not implemented")
+	return m.client.transport.send(ctx, peerID, data)
 }
 
 // Messages returns a channel for receiving messages
@@ -105,12 +106,11 @@ func (m *mesh) Peers() []string {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	peers := make([]string, 0, len(m.peers))
-	for peer := range m.peers {
-		peers = append(peers, peer)
-	}
-
-	return peers
+	// Refresh peers from transport
+	currentPeers := m.client.transport.getMeshPeers()
+	
+	// Update local cache if needed (optional, for now just return current)
+	return currentPeers
 }
 
 // Leave leaves the mesh network
@@ -123,9 +123,6 @@ func (m *mesh) Leave() error {
 	}
 
 	m.closed = true
-
-	// TODO: Close all peer connections and cleanup
-
 	close(m.messages)
 
 	return nil

@@ -199,7 +199,7 @@ Include:
 - Use secure defaults
 - Validate all inputs
 - Follow security best practices
-- Report security issues privately to security@cloudbridge.global
+- Report security issues privately to security@2gc.ru
 
 ### Performance
 
@@ -223,7 +223,7 @@ Maintainers will handle releases. The process includes:
 
 - GitHub Discussions: For questions and discussions
 - GitHub Issues: For bug reports and feature requests
-- Email: dev@cloudbridge.global for private inquiries
+- Email: dev@2gc.ru for private inquiries
 
 ## License
 

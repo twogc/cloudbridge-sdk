@@ -179,16 +179,16 @@ client.share_dataset(
 
 ## Getting API Token
 
-1. Visit [CloudBridge Dashboard](https://dashboard.cloudbridge.global)
+1. Visit [CloudBridge Dashboard](https://dashboard.2gc.ru)
 2. Navigate to Settings > API Tokens
 3. Click "Generate New Token"
 4. Copy and use in your SDK configuration
 
 ## Support
 
-- Documentation: [https://docs.cloudbridge.global](https://docs.cloudbridge.global)
+- Documentation: [https://docs.2gc.ru](https://docs.2gc.ru)
 - GitHub Issues: [https://github.com/twogc/cloudbridge-sdk/issues](https://github.com/twogc/cloudbridge-sdk/issues)
-- Community: [https://community.cloudbridge.global](https://community.cloudbridge.global)
+- Community: [https://community.2gc.ru](https://community.2gc.ru)
 
 ## Contributing
 

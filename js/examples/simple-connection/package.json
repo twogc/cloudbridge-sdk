@@ -1,0 +1,18 @@
+{
+  "name": "simple-connection-example",
+  "version": "1.0.0",
+  "description": "Simple connection example for CloudBridge JS SDK",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/ws": "^8.5.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}

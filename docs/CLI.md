@@ -48,20 +48,20 @@ cloudbridge health
 
 Output:
 ```
-✓ Overall Status: healthy
+[OK] Overall Status: healthy
   Checked at: 2025-11-12T10:30:00Z
 
 Components:
   NAME    STATUS      LATENCY  MESSAGE
-  client  ✓ healthy   2ms      CloudBridge client initialized
-  auth    ✓ healthy   -        Authentication token valid
-  p2p     ✓ healthy   -        P2P manager ready
-  quic    ✓ healthy   1ms      QUIC transport available
+  client  [OK] healthy   2ms      CloudBridge client initialized
+  auth    [OK] healthy   -        Authentication token valid
+  p2p     [OK] healthy   -        P2P manager ready
+  quic    [OK] healthy   1ms      QUIC transport available
 
 Connectivity:
-  Relay Server: ✓ OK
-  Internet:     ✓ OK
-  DNS:          ✓ OK
+  Relay Server: [OK] OK
+  Internet:     [OK] OK
+  DNS:          [OK] OK
   Latency:      15ms
 ```
 
@@ -118,7 +118,7 @@ cloudbridge connect [flags] <peer-id>
 **Output:**
 ```
 Connecting to peer: peer-123
-✓ Connected to peer peer-123
+[OK] Connected to peer peer-123
   Connected at: 2025-11-12T10:30:00Z
   Latency: 12ms
 
@@ -232,7 +232,7 @@ cloudbridge tunnel [flags] <peer-id>
 Creating tcp tunnel to peer: peer-123
   Local:  localhost:8080
   Remote: localhost:80
-✓ Tunnel established
+[OK] Tunnel established
   Listening on: localhost:8080
 
 Press Ctrl+C to stop the tunnel
@@ -285,20 +285,20 @@ cloudbridge health [flags]
 
 **Output (Table):**
 ```
-✓ Overall Status: healthy
+[OK] Overall Status: healthy
   Checked at: 2025-11-12T10:30:00Z
 
 Components:
   NAME    STATUS      LATENCY  MESSAGE
-  client  ✓ healthy   2ms      CloudBridge client initialized
-  auth    ✓ healthy   -        Authentication token valid
-  p2p     ✓ healthy   -        P2P manager ready
-  quic    ✓ healthy   1ms      QUIC transport available
+  client  [OK] healthy   2ms      CloudBridge client initialized
+  auth    [OK] healthy   -        Authentication token valid
+  p2p     [OK] healthy   -        P2P manager ready
+  quic    [OK] healthy   1ms      QUIC transport available
 
 Connectivity:
-  Relay Server: ✓ OK
-  Internet:     ✓ OK
-  DNS:          ✓ OK
+  Relay Server: [OK] OK
+  Internet:     [OK] OK
+  DNS:          [OK] OK
   Latency:      15ms
 
 Performance:
