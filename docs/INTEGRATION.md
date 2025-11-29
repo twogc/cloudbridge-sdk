@@ -11,74 +11,74 @@ CloudBridge SDK integrates with the CloudBridge Relay Client to provide simplifi
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Application Layer                         │
-│                  (Your Application Code)                     │
+│                    Application Layer                        │
+│                  (Your Application Code)                    │
 └─────────────────────────────────────────────────────────────┘
                               |
                               v
 ┌─────────────────────────────────────────────────────────────┐
-│                    CloudBridge SDK                           │
+│                    CloudBridge SDK                          │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │  High-Level API                                        │  │
-│  │  - Client                                              │  │
-│  │  - Connection                                          │  │
-│  │  - Tunnel                                              │  │
-│  │  - Mesh                                                │  │
+│  │  High-Level API                                       │  │
+│  │  - Client                                             │  │
+│  │  - Connection                                         │  │
+│  │  - Tunnel                                             │  │
+│  │  - Mesh                                               │  │
 │  └───────────────────────────────────────────────────────┘  │
-│                              |                               │
-│                              v                               │
+│                              |                              │
+│                              v                              │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │  Transport Layer (transport.go)                        │  │
-│  │  - Protocol selection                                  │  │
-│  │  - Connection management                               │  │
-│  │  - Error handling                                      │  │
+│  │  Transport Layer (transport.go)                       │  │
+│  │  - Protocol selection                                 │  │
+│  │  - Connection management                              │  │
+│  │  - Error handling                                     │  │
 │  └───────────────────────────────────────────────────────┘  │
-│                              |                               │
-│                              v                               │
+│                              |                              │
+│                              v                              │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │  Bridge Layer (internal/bridge)                        │  │
-│  │  - ClientBridge                                        │  │
-│  │  - Protocol adaptation                                 │  │
-│  │  - State management                                    │  │
-│  └───────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              |
-                              v
-┌─────────────────────────────────────────────────────────────┐
-│            CloudBridge Relay Client (pkg/)                   │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  P2P Manager (pkg/p2p)                                 │  │
-│  │  - Connection establishment                            │  │
-│  │  - Mesh networking                                     │  │
-│  │  - Peer discovery                                      │  │
-│  └───────────────────────────────────────────────────────┘  │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  QUIC Connection (pkg/quic)                            │  │
-│  │  - Stream management                                   │  │
-│  │  - TLS configuration                                   │  │
-│  │  - Connection monitoring                               │  │
-│  └───────────────────────────────────────────────────────┘  │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  API Manager (pkg/api)                                 │  │
-│  │  - REST API client                                     │  │
-│  │  - Peer registration                                   │  │
-│  │  - Status updates                                      │  │
-│  └───────────────────────────────────────────────────────┘  │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  Auth Manager (pkg/auth)                               │  │
-│  │  - JWT token management                                │  │
-│  │  - OIDC integration                                    │  │
-│  │  - Token refresh                                       │  │
+│  │  Bridge Layer (internal/bridge)                       │  │
+│  │  - ClientBridge                                       │  │
+│  │  - Protocol adaptation                                │  │
+│  │  - State management                                   │  │
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                               |
                               v
 ┌─────────────────────────────────────────────────────────────┐
-│             CloudBridge Global Network                       │
-│  - Relay Servers                                             │
-│  - Control Plane                                             │
-│  - DDoS Protection                                           │
-│  - Monitoring                                                │
+│            CloudBridge Relay Client (pkg/)                  │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  P2P Manager (pkg/p2p)                                │  │
+│  │  - Connection establishment                           │  │
+│  │  - Mesh networking                                    │  │
+│  │  - Peer discovery                                     │  │
+│  └───────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  QUIC Connection (pkg/quic)                           │  │
+│  │  - Stream management                                  │  │
+│  │  - TLS configuration                                  │  │
+│  │  - Connection monitoring                              │  │
+│  └───────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  API Manager (pkg/api)                                │  │
+│  │  - REST API client                                    │  │
+│  │  - Peer registration                                  │  │
+│  │  - Status updates                                     │  │
+│  └───────────────────────────────────────────────────────┘  │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  Auth Manager (pkg/auth)                              │  │
+│  │  - JWT token management                               │  │
+│  │  - OIDC integration                                   │  │
+│  │  - Token refresh                                      │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                              |
+                              v
+┌─────────────────────────────────────────────────────────────┐
+│             CloudBridge Global Network                      │
+│  - Relay Servers                                            │
+│  - Control Plane                                            │
+│  - DDoS Protection                                          │
+│  - Monitoring                                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -280,7 +280,7 @@ SDK depends on relay client as a module:
 ```go
 // go.mod
 require (
-    github.com/2gc-dev/cloudbridge-client v1.4.20
+    github.com/2gc-dev/relay-client v1.4.20
     github.com/quic-go/quic-go v0.40.1
     google.golang.org/grpc v1.60.1
 )
@@ -291,7 +291,7 @@ require (
 ```
 cloudbridge (SDK)
     ├── internal/bridge
-    │   └── imports: github.com/2gc-dev/cloudbridge-client/pkg/*
+    │   └── imports: github.com/2gc-dev/relay-client/pkg/*
     ├── transport.go
     │   └── imports: internal/bridge
     ├── client.go
@@ -449,5 +449,5 @@ Current integration is alpha (0.1.0):
 
 - [SDK Architecture](./ARCHITECTURE.md)
 - [API Reference](./API_REFERENCE.md)
-- [CloudBridge Client Architecture](https://github.com/2gc-dev/cloudbridge-client/blob/main/Architecture.md)
+- [CloudBridge Client Architecture](https://github.com/2gc-dev/relay-client/blob/main/Architecture.md)
 - [QUIC Protocol Documentation](https://github.com/twogc/cloudbridge-docs/blob/main/LAB/QUIC_Laboratory_Research_Report.md)

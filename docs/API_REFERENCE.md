@@ -38,6 +38,29 @@ client, err := cloudbridge.NewClient(
 )
 ```
 
+### Client.Serve
+
+Starts accepting incoming connections and handling tunnels. This method blocks until the context is cancelled.
+
+```go
+func (c *Client) Serve(ctx context.Context) error
+```
+
+**Parameters:**
+- `ctx` - Context for cancellation
+
+**Returns:**
+- `error` - Runtime error
+
+**Example:**
+```go
+go func() {
+    if err := client.Serve(ctx); err != nil {
+        log.Printf("Serve error: %v", err)
+    }
+}()
+```
+
 ### Client.Connect
 
 Establishes a P2P connection to the specified peer.

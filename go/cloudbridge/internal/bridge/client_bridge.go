@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/2gc-dev/cloudbridge-client/pkg/api"
-	"github.com/2gc-dev/cloudbridge-client/pkg/auth"
-	"github.com/2gc-dev/cloudbridge-client/pkg/p2p"
-	"github.com/2gc-dev/cloudbridge-client/pkg/quic"
+	"github.com/2gc-dev/relay-client/pkg/api"
+	"github.com/2gc-dev/relay-client/pkg/auth"
+	"github.com/2gc-dev/relay-client/pkg/p2p"
+	"github.com/2gc-dev/relay-client/pkg/quic"
+	quicgo "github.com/quic-go/quic-go"
 )
 
 // ClientBridge provides integration between SDK and CloudBridge Relay Client
@@ -230,6 +231,13 @@ func (b *ClientBridge) GetMeshPeers() []string {
 		return []string{}
 	}
 	return b.p2pManager.GetConnectedPeers()
+}
+
+// SetStreamHandler sets the handler for incoming streams
+func (b *ClientBridge) SetStreamHandler(handler func(stream *quicgo.Stream)) {
+	if b.p2pManager != nil {
+		b.p2pManager.SetStreamHandler(handler)
+	}
 }
 
 // PeerConnection represents a connection to a peer through the bridge

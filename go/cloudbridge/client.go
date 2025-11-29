@@ -9,6 +9,8 @@ import (
 	"net"
 	"sync"
 	"time"
+
+	quicgo "github.com/quic-go/quic-go"
 )
 
 // Client represents a CloudBridge SDK client
@@ -240,23 +242,41 @@ func (c *Client) Health(ctx context.Context) (*Health, error) {
 
 // Serve starts accepting incoming connections and handling tunnels
 func (c *Client) Serve(ctx context.Context) error {
-	// TODO: Implement real listener from transport
-	// For now, we simulate a listener or block until context is done
-	// In a real implementation, c.transport should expose an Accept() method
-	
+	c.mu.RLock()
+	if c.closed {
+		c.mu.RUnlock()
+		return errors.New("client is closed")
+	}
+	c.mu.RUnlock()
+
+	// Register stream handler with the bridge
+	c.transport.bridge.SetStreamHandler(func(stream *quicgo.Stream) {
+		// Type assert and handle incoming connection
+		c.HandleIncomingConnection(stream)
+	})
+
+	// Block until context is done
 	<-ctx.Done()
 	return nil
 }
 
 // HandleIncomingConnection handles an incoming P2P connection
 // This should be called by the transport when a new stream is accepted
-func (c *Client) HandleIncomingConnection(conn net.Conn) {
+func (c *Client) HandleIncomingConnection(conn interface{}) {
+	// Type assert to net.Conn or quic.Stream
+	netConn, ok := conn.(net.Conn)
+	if !ok {
+		// Try to handle as a generic io.ReadWriteCloser
+		fmt.Printf("received non-net.Conn connection: %T\n", conn)
+		return
+	}
+
 	go func() {
-		defer conn.Close()
+		defer netConn.Close()
 
 		// Read handshake
 		buf := make([]byte, 1024)
-		n, err := conn.Read(buf)
+		n, err := netConn.Read(buf)
 		if err != nil {
 			fmt.Printf("failed to read handshake: %v\n", err)
 			return
@@ -283,8 +303,8 @@ func (c *Client) HandleIncomingConnection(conn net.Conn) {
 			defer localConn.Close()
 
 			// Bidirectional copy
-			go io.Copy(localConn, conn)
-			io.Copy(conn, localConn)
+			go io.Copy(localConn, netConn)
+			io.Copy(netConn, localConn)
 		}
 	}()
 }
